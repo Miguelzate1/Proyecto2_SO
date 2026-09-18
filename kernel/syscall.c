@@ -12,8 +12,7 @@ int
 fetchaddr(uint64 addr, uint64 *ip)
 {
   struct proc *p = myproc();
-  if (addr >= p->sz ||
-      addr + sizeof(uint64) > p->sz) // both tests needed, in case of overflow
+  if (addr >= p->sz || addr + sizeof(uint64) > p->sz) // both tests needed, in case of overflow
     return -1;
   if (copyin(p->pagetable, p->sz, (char *)ip, addr, sizeof(*ip)) != 0)
     return -1;
@@ -131,7 +130,7 @@ static uint64 (*syscalls[])(void) = {
   [SYS_mkdir]   = sys_mkdir,
   [SYS_close]   = sys_close,
   [SYS_sync]    = sys_sync,
-  [SYS_trace]   sys_trace,
+  [SYS_trace]   = sys_trace,
   // clang-format on
 };
 
@@ -146,18 +145,18 @@ syscall(void)
     // 1. Ejecuta la syscall y guarda el valor de retorno en a0
     p->trapframe->a0 = syscalls[num]();
 
-    // 2. Si coincide con la syscall monitoreada, imprime la información
-    if(num == p->trace_syscall){
-      printf("PID: %d\n", p->pid);
-      printf("SYSCALL: %d\n", num);
-      printf("RETURN: %d\n", (int)p->trapframe->a0);
-      printf("s0: 0x%x\n", (uint64)p->trapframe->s0);
-      printf("s1: 0x%x\n", (uint64)p->trapframe->s1);
-      printf("a0: 0x%x\n", (uint64)p->trapframe->a0);
-      printf("a1: 0x%x\n", (uint64)p->trapframe->a1);
+    // 2. Si la syscall esta incluida en la mascara de bits, imprime
+    if(p->trace_syscall & (1 << num)){
+      printk("PID: %d\n", p->pid);
+      printk("SYSCALL: %d\n", num);
+      printk("RETURN: %d\n", (int)p->trapframe->a0);
+      printk("s0: %p\n", (void *)p->trapframe->s0);
+      printk("s1: %p\n", (void *)p->trapframe->s1);
+      printk("a0: %p\n", (void *)p->trapframe->a0);
+      printk("a1: %p\n", (void *)p->trapframe->a1);
     }
   } else {
-    printf("%d %s: unknown sys call %d\n",
+    printk("%d %s: unknown sys call %d\n",
             p->pid, p->name, num);
     p->trapframe->a0 = -1;
   }

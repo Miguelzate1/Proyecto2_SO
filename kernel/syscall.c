@@ -142,12 +142,23 @@ syscall(void)
   struct proc *p = myproc();
 
   num = p->trapframe->a7;
-  if (num > 0 && num < NELEM(syscalls) && syscalls[num]) {
-    // Use num to lookup the system call function for num, call it,
-    // and store its return value in p->trapframe->a0
+  if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+    // 1. Ejecuta la syscall y guarda el valor de retorno en a0
     p->trapframe->a0 = syscalls[num]();
+
+    // 2. Si coincide con la syscall monitoreada, imprime la información
+    if(num == p->trace_syscall){
+      printf("PID: %d\n", p->pid);
+      printf("SYSCALL: %d\n", num);
+      printf("RETURN: %d\n", (int)p->trapframe->a0);
+      printf("s0: 0x%x\n", (uint64)p->trapframe->s0);
+      printf("s1: 0x%x\n", (uint64)p->trapframe->s1);
+      printf("a0: 0x%x\n", (uint64)p->trapframe->a0);
+      printf("a1: 0x%x\n", (uint64)p->trapframe->a1);
+    }
   } else {
-    printk("%d %s: unknown sys call %d\n", p->pid, p->name, num);
+    printf("%d %s: unknown sys call %d\n",
+            p->pid, p->name, num);
     p->trapframe->a0 = -1;
   }
 }

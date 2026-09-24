@@ -275,7 +275,7 @@ kfork(void)
     return -1;
   }
   np->sz = p->sz;
-
+  np->trace_syscall = p->trace_syscall;
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -699,30 +699,19 @@ procdump(void)
     printk("%d %s %s", p->pid, state, p->name);
     printk("\n");
   }
-
-  void
-procdump(void)
-{
-  // ... (todo el código original de procdump se queda igual)
-  // ... hasta su llave de cierre normal:
 }
-
-// Recorre la tabla de procesos y cuenta cuántos están en estado RUNNABLE.
 int
 countrunnable(void)
 {
   struct proc *p;
-  int n = 0;
+  int count = 0;
 
-  for(p = proc; p < &proc[NPROC]; p++){
+  for(p = proc; p < &proc[NPROC]; p++) {
     acquire(&p->lock);
-    if(p->state == RUNNABLE)
-      n++;
+    if(p->state == RUNNABLE) {
+      count++;
+    }
     release(&p->lock);
   }
-
-  return n;
+  return count;
 }
-}
-
-  

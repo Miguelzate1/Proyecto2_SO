@@ -118,3 +118,29 @@ sys_trace(void)
   myproc()->trace_syscall = sys_id;
   return 0;
 }
+
+#include "sysinfo.h"
+
+uint64
+sys_sysinfo(void)
+{
+  uint64 addr;
+  struct sysinfo info;
+  struct proc *p = myproc();
+
+  if(argaddr(0, &addr) < 0)
+    return -1;
+
+  uint64 free = countfreepages();
+  uint64 total = (PHYSTOP - KERNBASE) / PGSIZE; // total de páginas administradas por el kernel
+
+  info.freemem    = free * PGSIZE;
+  info.availpages = free;
+  info.usedpages  = total - free;
+  info.nproc      = countrunnable();
+
+  if(copyout(p->pagetable, addr, (char *)&info, sizeof(info)) < 0)
+    return -1;
+
+  return 0;
+}

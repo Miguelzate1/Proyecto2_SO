@@ -1,1 +1,14 @@
-*
+# Binarios y artefactos de compilación de xv6
+*.o
+*.d
+*.asm
+*.sym
+kernel/kernel
+mkfs/mkfs
+fs.img
+.gdbinit
+*.img
+ 
+# Basura del sistema operativo / editor
+.DS_Store
+Thumbs.db

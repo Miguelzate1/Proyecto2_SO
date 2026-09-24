@@ -700,21 +700,29 @@ procdump(void)
     printk("\n");
   }
 
-  // Recorre la tabla de procesos y cuenta cuántos están en estado RUNNABLE.
-  int
-  countrunnable(void)
-  {
-    struct proc *p;
-    int n = 0;
-
-    for(p = proc; p < &proc[NPROC]; p++){
-      acquire(&p->lock);
-      if(p->state == RUNNABLE)
-        n++;
-      release(&p->lock);
-    }
-
-    return n;
-  }
+  void
+procdump(void)
+{
+  // ... (todo el código original de procdump se queda igual)
+  // ... hasta su llave de cierre normal:
 }
 
+// Recorre la tabla de procesos y cuenta cuántos están en estado RUNNABLE.
+int
+countrunnable(void)
+{
+  struct proc *p;
+  int n = 0;
+
+  for(p = proc; p < &proc[NPROC]; p++){
+    acquire(&p->lock);
+    if(p->state == RUNNABLE)
+      n++;
+    release(&p->lock);
+  }
+
+  return n;
+}
+}
+
+  

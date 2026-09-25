@@ -148,7 +148,7 @@ syscall(void)
     p->trapframe->a0 = syscalls[num]();
 
     // 2. Si la syscall esta incluida en la mascara de bits, imprime
-    if(p->trace_syscall & (1 << num)){
+    if(p->trace_syscall == num){
       printk("PID: %d\n", p->pid);
       printk("SYSCALL: %d\n", num);
       printk("RETURN: %d\n", (int)p->trapframe->a0);

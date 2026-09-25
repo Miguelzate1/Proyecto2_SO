@@ -24,8 +24,11 @@ En este proyecto se extendió el núcleo del sistema operativo **xv6-riscv** med
 
 | Archivo | Tipo | Descripción de la Modificación |
 | :--- | :--- | :--- |
+| `Autoevaluaciones/AUTOEVALUACION1.MD` | Creado | Autoevaluación individual de Miguel Ángel Alzate Chavarria. |
+| `Autoevaluaciones/AUTOEVALUACION2.MD` | Creado | Autoevaluación individual de Samuel Quintero. |
 | `kernel/sysinfo.h` | Creado | Define la estructura `struct sysinfo` compartida entre kernel y usuario. |
 | `user/sysinfo.c` | Creado | Programa de usuario para invocar y desplegar la información recibida de `sysinfo`. |
+| `user/sysinfotest.c` | Creado | Programa de pruebas automatizadas para verificar el correcto funcionamiento de `sysinfo`. |
 | `user/trace.c` | Creado | Programa de usuario que configura la syscall a monitorear y ejecuta el comando objetivo. |
 | `kernel/proc.h` | Modificado | Inclusión del campo `trace_syscall` dentro de `struct proc` para almacenar el identificador a monitorear. |
 | `kernel/proc.c` | Modificado | Limpieza de `trace_syscall` en `freeproc()`, propagación del parámetro en `fork()` para subprocesos e implementación de `countrunnable()`. |
@@ -36,8 +39,8 @@ En este proyecto se extendió el núcleo del sistema operativo **xv6-riscv** med
 | `kernel/defs.h` | Modificado | Declaración de prototipos del kernel (`countrunnable`, `countfreepages`, `ireclaim`, `uvmclear`). |
 | `user/user.h` | Modificado | Prototipos de funciones de usuario para las syscalls `trace()` y `sysinfo()`. |
 | `user/usys.pl` | Modificado | Entrada de stubs en ensamblador para la generación automatizada de las llamadas en espacio de usuario. |
-| `Makefile` | Modificado | Registro de los ejecutables `_trace` y `_sysinfo` en la regla `UPROGS`. |
-
+| `Makefile` | Modificado | Registro de los ejecutables `_trace`, `_sysinfo` y `_sysinfotest` en la regla `UPROGS`. |
+| `.gitignore` | Modificado | Reglas de exclusión para evitar la subida de ejecutables generados y binarios de compilación. |
 ---
 
 ## Decisiones de Diseño Realizadas

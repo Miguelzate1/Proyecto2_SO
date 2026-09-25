@@ -103,6 +103,7 @@ extern uint64 sys_mkdir(void);
 extern uint64 sys_close(void);
 extern uint64 sys_sync(void);
 extern uint64 sys_trace(void);
+extern uint64 sys_sysinfo(void);
 
 // An array mapping syscall numbers from syscall.h
 // to the function that handles the system call.
@@ -131,6 +132,7 @@ static uint64 (*syscalls[])(void) = {
   [SYS_close]   = sys_close,
   [SYS_sync]    = sys_sync,
   [SYS_trace]   = sys_trace,
+  [SYS_sysinfo] = sys_sysinfo,
   // clang-format on
 };
 
@@ -146,7 +148,7 @@ syscall(void)
     p->trapframe->a0 = syscalls[num]();
 
     // 2. Si la syscall esta incluida en la mascara de bits, imprime
-    if(p->trace_syscall & (1 << num)){
+    if(p->trace_syscall == num){
       printk("PID: %d\n", p->pid);
       printk("SYSCALL: %d\n", num);
       printk("RETURN: %d\n", (int)p->trapframe->a0);

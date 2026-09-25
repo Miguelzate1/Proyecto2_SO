@@ -700,3 +700,18 @@ procdump(void)
     printk("\n");
   }
 }
+int
+countrunnable(void)
+{
+  struct proc *p;
+  int count = 0;
+
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->state == RUNNABLE) {
+      count++;
+    }
+    release(&p->lock);
+  }
+  return count;
+}

@@ -16,6 +16,8 @@ sys_exit(void)
   return 0; // not reached
 }
 
+
+
 uint64
 sys_getpid(void)
 {
@@ -116,5 +118,30 @@ sys_trace(void)
   int sys_id;
   argint(0, &sys_id);
   myproc()->trace_syscall = sys_id;
+  return 0;
+}
+
+#include "sysinfo.h"
+
+uint64
+sys_sysinfo(void)
+{
+  uint64 addr;
+  struct sysinfo info;
+  struct proc *p = myproc();
+
+  argaddr(0, &addr);
+
+  uint64 free = countfreepages();
+  uint64 total = (PHYSTOP - KERNBASE) / PGSIZE; // total de páginas administradas por el kernel
+
+  info.freemem    = free * PGSIZE;
+  info.availpages = free;
+  info.usedpages  = total - free;
+  info.nproc      = countrunnable();
+
+  if(copyout(p->pagetable, p->sz, addr, (char *)&info, sizeof(info)) < 0)
+    return -1;
+
   return 0;
 }
